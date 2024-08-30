@@ -6,11 +6,11 @@ fetch('suscriptores.json')
         cardsData.forEach((card, index) => {
             steamCards.insertAdjacentHTML('beforeend', `
                 <div class="p-2 w-1/3">
-                    <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden js-steamCard transform transition duration-300 hover:scale-105 hover:shadow-xl">
-                        <img src="${card.profile_image_url}" alt="${card.user_name}" class="w-full h-auto">
-                        <div class="p-2 text-center">
-                            <h3 class="text-lg font-semibold text-white">${card.user_name}</h3>
-                            <p class="text-xs text-gray-400">${card.user_login}</p>
+                    <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden js-steamCard transform transition duration-300 hover:scale-10 hover:shadow-xl">
+                        <img src="${card.profile_image_url}" alt="${card.user_name}" class="w-full h-1/2">
+                        <div class="p-5 m-2 text-center">
+                            <h3 class="text-4xl font-semibold text-white">${card.user_name}</h3>
+                            <p class="text-2xl text-gray-400">Regaladas: ${card.gift_count}</p>
                         </div>
                     </div>
                 </div>

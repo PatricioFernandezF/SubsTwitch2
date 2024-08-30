@@ -2,6 +2,19 @@ import requests
 import json
 import os
 
+# Procesar los suscriptores para contar el número de regalos
+def calcular_gift_count(subscribers):
+    for subscriber in subscribers:
+        gift_count = sum(1 for other_subscriber in subscribers if other_subscriber.get('gifter_name') == subscriber['user_name'])
+        subscriber['gift_count'] = gift_count
+    return subscribers
+
+# Ordenar suscriptores por gift_count y eliminar al usuario patriciofernandezia
+def ordenar_y_filtrar_subs(subscribers):
+    filtered_subscribers = [sub for sub in subscribers if sub['user_name'].lower() != 'patriciofernandezia']
+    sorted_subscribers = sorted(filtered_subscribers, key=lambda x: x['gift_count'], reverse=True)
+    return filtered_subscribers
+
 # Cargar las variables de entorno desde el archivo .env manualmente
 def load_env():
     env_vars = {}
@@ -55,11 +68,15 @@ def get_new_tokens(config):
 
     if response.status_code == 200:
         tokens = response.json()
+        if 'refresh_token' not in tokens or not tokens['refresh_token']:
+            print("Error: No se recibió el refresh token.")
+            return None
         save_tokens(config['token_file'], tokens)
         return tokens['access_token']
     else:
         print("Error al obtener el token de acceso:", response.json())
         return None
+
 
 # Función para renovar el token de acceso usando el refresh token
 def refresh_access_token(config, refresh_token):
@@ -83,10 +100,8 @@ def refresh_access_token(config, refresh_token):
 def get_access_token(config):
     tokens = load_tokens(config['token_file'])
     if tokens:
-        # Intentar renovar el token de acceso usando el refresh token
         return refresh_access_token(config, tokens['refresh_token'])
     else:
-        # Si no hay tokens, obtener uno nuevo usando el authorization_code
         return get_new_tokens(config)
 
 # Función para obtener el ID del usuario autenticado
@@ -127,7 +142,6 @@ def get_subscribers(headers, broadcaster_id):
 
             all_subscribers.extend(subscribers_data)
             
-            # Si hay un cursor de paginación, se actualiza la URL para la próxima solicitud
             cursor = data.get('pagination', {}).get('cursor')
             if cursor:
                 url = f'https://api.twitch.tv/helix/subscriptions?broadcaster_id={broadcaster_id}&after={cursor}'
@@ -138,11 +152,22 @@ def get_subscribers(headers, broadcaster_id):
             return None
     return all_subscribers
 
-# Función para guardar los suscriptores en un archivo JSON
-def save_subscribers_to_json(subscribers, json_filename):
+# Función para obtener las donaciones de bits
+def get_bits_donors(headers, broadcaster_id):
+    url = f'https://api.twitch.tv/helix/bits/leaderboard?count=10&period=all&broadcaster_id={broadcaster_id}'
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        return response.json().get('data', [])
+    else:
+        print("Error al obtener la lista de donadores de bits:", response.json())
+        return None
+
+# Función para guardar los datos en un archivo JSON
+def save_data_to_json(data, json_filename):
     with open(os.path.join(ruta, json_filename), mode='w', encoding='utf-8') as file:
-        json.dump(subscribers, file, indent=4, ensure_ascii=False)
-    print(f"La lista de suscriptores se ha guardado en '{os.path.join(ruta, json_filename)}'.")
+        json.dump(data, file, indent=4, ensure_ascii=False)
+    print(f"Los datos se han guardado en '{os.path.join(ruta, json_filename)}'.")
 
 # Función principal para ejecutar la petición y guardar los datos en JSON
 def peticion():
@@ -163,13 +188,17 @@ def peticion():
     if not broadcaster_id:
         return
 
+    # Obtener suscriptores
     subscribers = get_subscribers(headers, broadcaster_id)
-    if not subscribers:
-        return
+    if subscribers:
+        subscribers = calcular_gift_count(subscribers)
+        subscribers = ordenar_y_filtrar_subs(subscribers)
+        save_data_to_json(subscribers, 'suscriptores.json')
 
-    json_filename = 'suscriptores.json'
-    save_subscribers_to_json(subscribers, json_filename)
-    return subscribers
+    # Obtener donaciones de bits y guardar en bits.json
+    bits_donors = get_bits_donors(headers, broadcaster_id)
+    if bits_donors:
+        save_data_to_json(bits_donors, 'bits.json')
 
 if __name__ == '__main__':
     global ruta
