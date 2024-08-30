@@ -1,0 +1,106 @@
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 1rem;
+    background-color: #2D323B;
+}
+
+.d-steam-cards {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.d-steam-card-wrapper {
+    max-width: 250px;
+    min-width: 150px;
+    margin: 0;
+    flex: 0 1 16.66%;
+    padding: 1rem;
+}
+
+
+.d-steam-card::before {
+    width: 100%;
+    height: 172%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    background-image: linear-gradient(35deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.07) 51.5%, rgba(255, 255, 255, 0.15) 54%, rgba(255, 255, 255, 0.15) 100%);
+    transform: translateY(-36%);
+    opacity: 0.5;
+    transition: all ease 0.28s 0.01s;
+}
+
+.d-steam-card:hover,
+.d-steam-card:focus {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transform: perspective(222px) translate3d(0px, 0px, 8px) rotateX(3deg);
+    transform-origin: center;
+    box-shadow: 0 14px 16px -2px rgba(0, 0, 0, 0.5);
+}
+
+.d-steam-card:hover::before,
+.d-steam-card:focus::before {
+    opacity: 1;
+    transform: translateY(-20%);
+}
+
+
+.d-steam-card.active {
+    transform: scale(1.05) perspective(222px) translate3d(0px, 0px, 10px) rotateX(5deg);
+    box-shadow: 0 18px 20px -2px rgba(0, 0, 0, 0.6);
+}
+
+
+.d-steam-card {
+    position: relative;
+    background-color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 10px -2px rgba(0, 0, 0, 0.5);
+    transition: all ease 0.28s 0.01s;
+    transform: perspective(222px) translate3d(0px, 5px, 0px) rotateX(0deg);
+    perspective-origin: top;
+    z-index: 1;
+    overflow: hidden;
+    padding: 1rem; /* Ajusta este valor según el diseño */
+}
+
+.d-steam-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 5px; /* Opcional: da un borde redondeado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente para resaltar el texto */
+    color: white;
+    text-align: center;
+}
+
+.card-content h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.card-content p {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+}
