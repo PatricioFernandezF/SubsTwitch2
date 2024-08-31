@@ -27,28 +27,29 @@ fetch('suscriptores.json')
         function activateCard(index) {
             if (index >= cards.length) {
                 // Reinicia el ciclo
-                document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+                const steamCardsContainer = document.querySelector('.js-steamCards');
+                steamCardsContainer.scrollTo({ top: 0, behavior: 'smooth' });
                 setTimeout(() => {
                     activateCard(0);
                 }, 1500); // Espera un segundo antes de reiniciar
                 return;
             }
-
+        
             cards[index].classList.add('scale-110');
-
+        
             // Cada fila tiene exactamente 3 tarjetas
             const cardsPerRow = 3;
             const rowIndex = Math.floor(index / cardsPerRow);
-
+        
             // Si la tarjeta está en la tercera fila o más abajo, hace scroll
             if (rowIndex >= 2) {
                 cards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-
+        
             setTimeout(() => {
                 cards[index].classList.remove('scale-110');
                 activateCard(index + 1);
-            }, 1000);
+            }, 1500);
         }
 
         activateCard(0);

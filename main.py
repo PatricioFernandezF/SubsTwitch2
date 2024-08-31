@@ -13,7 +13,7 @@ def calcular_gift_count(subscribers):
 def ordenar_y_filtrar_subs(subscribers):
     filtered_subscribers = [sub for sub in subscribers if sub['user_name'].lower() != 'patriciofernandezia']
     sorted_subscribers = sorted(filtered_subscribers, key=lambda x: x['gift_count'], reverse=True)
-    return filtered_subscribers
+    return sorted_subscribers
 
 # Cargar las variables de entorno desde el archivo .env manualmente
 def load_env():

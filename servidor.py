@@ -1,10 +1,14 @@
-import os
+from livereload import Server, shell
 
-# Ruta absoluta donde se encuentra el archivo index.html
+server = Server()
+
 ruta_absoluta = r'C:\Users\Patricio\Documents\Clases Video\Directos\personalizacion\SubsTwitch2'
+# Observa los archivos HTML, CSS y JS
+server.watch(ruta_absoluta+'\index.html')
+server.watch(ruta_absoluta+'\script.js')
+server.watch(ruta_absoluta+'\style.css')
+server.watch(ruta_absoluta+'\bits.json')
+server.watch(ruta_absoluta+'\suscriptores.json')
 
-# Cambiar al directorio donde está el index.html
-os.chdir(ruta_absoluta)
-
-# Iniciar un servidor HTTP en el puerto 8765
-os.system('python -m http.server 8765')
+# Ejecuta el servidor en el puerto 8765
+server.serve(root=ruta_absoluta, port=8765)
