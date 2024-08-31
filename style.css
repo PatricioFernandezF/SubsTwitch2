@@ -5,6 +5,8 @@
     box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
+
 body {
     padding: 1rem;
     background-color: #2D323B;
@@ -47,6 +49,22 @@ body {
     transform: perspective(222px) translate3d(0px, 0px, 8px) rotateX(3deg);
     transform-origin: center;
     box-shadow: 0 14px 16px -2px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes grow {
+    from {
+        transform: scale(0.5); /* Empieza más pequeño */
+        opacity: 0; /* Empieza invisible */
+    }
+    to {
+        transform: scale(1); /* Tamaño final */
+        opacity: 1; /* Visible al final */
+    }
+}
+
+/* Aplica la animación a los elementos del podio */
+.animate-grow {
+    animation: grow 1s ease-out;
 }
 
 .d-steam-card:hover::before,

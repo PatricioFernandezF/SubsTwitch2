@@ -3,19 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steam Cards</title>
+    <title>Podio con Hola</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Define la animación */
+        @keyframes grow {
+            from {
+                transform: scale(0.5); /* Empieza más pequeño */
+                opacity: 0; /* Empieza invisible */
+            }
+            to {
+                transform: scale(1); /* Tamaño final */
+                opacity: 1; /* Visible al final */
+            }
+        }
+
+        /* Aplica la animación a los elementos del podio */
+        .animate-grow {
+            animation: grow 1s ease-out forwards;
+        }
+
+        /* Ajusta la posición inicial para el podio */
+        .podio-container {
+            display: flex;
+            align-items: flex-end;
+            height: 80%; /* Usar 80% de la altura disponible */
+            padding: 20px;
+        }
+
+        .podio-item {
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 0 10px;
+        }
+
+        .podio-item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .first-place {
+            height: 100%; /* Barra más alta */
+        }
+
+        .second-place {
+            height: 85%; /* Barra ligeramente más baja */
+        }
+
+        .third-place {
+            height: 70%; /* Barra más baja */
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-white p-4">
     <h1 class="text-5xl font-bold text-left mb-8">GRACIAS SUSCRIPTORES</h1>
     <div class="flex h-screen">
         <!-- Parte de las tarjetas -->
-        <div class="w-1/2 flex flex-wrap -mx-4 js-steamCards overflow-y-auto">
+        <div class="w-3/5 flex flex-wrap -mx-4 js-steamCards overflow-y-auto overflow-x-hidden">
             <!-- Cards inserted with JS -->
         </div>
-        <!-- Parte estática con el texto "Hola" -->
-        <div class="w-1/2 flex items-center justify-center bg-gray-800">
-            <p class="text-6xl font-bold">Hola</p>
+        <!-- Parte del podio -->
+        <div class="w-2/5 flex flex-col items-center justify-center bg-gray-800">
+            <p class="text-5xl font-bold text-center mb-8">GRACIAS POR ESOS BITS</p>
+            <div class="podio-container" id="podio-container">
+                <!-- El podio será actualizado dinámicamente con JS -->
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

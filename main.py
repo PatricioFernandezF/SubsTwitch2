@@ -152,16 +152,33 @@ def get_subscribers(headers, broadcaster_id):
             return None
     return all_subscribers
 
-# Función para obtener las donaciones de bits
+
+# Función para obtener las donaciones de bits y las imágenes de perfil
 def get_bits_donors(headers, broadcaster_id):
     url = f'https://api.twitch.tv/helix/bits/leaderboard?count=10&period=all&broadcaster_id={broadcaster_id}'
     response = requests.get(url, headers=headers)
     
     if response.status_code == 200:
-        return response.json().get('data', [])
+        bits_donors = response.json().get('data', [])
+        
+        for donor in bits_donors:
+            user_id = donor['user_id']
+            user_info_url = f'https://api.twitch.tv/helix/users?id={user_id}'
+            user_info_response = requests.get(user_info_url, headers=headers)
+            
+            if user_info_response.status_code == 200:
+                user_info = user_info_response.json()
+                if 'data' in user_info and len(user_info['data']) > 0:
+                    profile_image_url = user_info['data'][0].get('profile_image_url')
+                    donor['profile_image_url'] = profile_image_url
+            else:
+                print(f"Error al obtener la información del usuario {user_id}: ", user_info_response.json())
+        
+        return bits_donors
     else:
         print("Error al obtener la lista de donadores de bits:", response.json())
         return None
+
 
 # Función para guardar los datos en un archivo JSON
 def save_data_to_json(data, json_filename):
